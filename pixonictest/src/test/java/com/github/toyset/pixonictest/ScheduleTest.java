@@ -27,7 +27,7 @@ public class ScheduleTest {
 		List<Integer> expected = Arrays.asList(1, 2, 3, 4);
 		List<Integer> result = Collections.synchronizedList(new ArrayList<>());
 		
-		Schedule schedule = new Schedule(1);
+		Schedule schedule = new Schedule();
 		try {
 			LocalDateTime currentTime = LocalDateTime.now();
 			
@@ -45,31 +45,5 @@ public class ScheduleTest {
 		}
 		
 		Assert.assertEquals(expected, result);
-	}
-	
-	@Test
-	public void noOverflow() {
-		
-		Schedule schedule = new Schedule(1);
-		try {
-			LocalDateTime currentTime = LocalDateTime.now();
-			
-			schedule.schedule(currentTime.minusYears(290), () -> null);
-			schedule.schedule(currentTime.plusYears(290), () -> null);
-		} finally {
-			schedule.shutdownNow();
-		}
-	}
-	
-	@Test(expected = ArithmeticException.class)
-	public void overflow() {
-		
-		Schedule schedule = new Schedule(1);
-		try {
-			LocalDateTime scheduledTime = LocalDateTime.now().plusYears(300);
-			schedule.schedule(scheduledTime, () -> null);
-		} finally {
-			schedule.shutdownNow();
-		}
 	}
 }
